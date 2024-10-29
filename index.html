@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamento Barbearia</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Agendamento  GABRIEL BARBERSHOP</h1>
+        <label for="procedimento">Escolha um procedimento:</label>
+        <select id="procedimento">
+            <option value="corte">Corte de Cabelo</option>
+            <option value="barba">Barba</option>
+            <option value="corte_barba">Corte e Barba</option>
+        </select>
+<label for="nome">Nome do Cliente:</label>
+<input type="text" id="nome" required>
+
+<label for="numero">Número do Cliente:</label>
+<input type="tel" id="numero" required>	
+
+        <label for="data">Escolha uma data:</label>
+        <input type="date" id="data" min="2023-10-28" required>
+
+        <label for="horario">Escolha um horário:</label>
+        <select id="horario"></select>
+
+        <button id="agendar">Agendar</button>
+
+        <div id="mensagem"></div>
+    </div>
+<h2>Agendamentos  GABRIEL BARBERSHOP</h2>
+<ul id="agendamentosList"></ul>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
