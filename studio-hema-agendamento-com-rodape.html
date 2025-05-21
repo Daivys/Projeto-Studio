@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Studio Hema - Agendamento</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff0f5;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    .container, .login-container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #c71585;
+      padding: 30px;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #c71585;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #c71585;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #a0106d;
+    }
+    .confirmation, .agenda-list {
+      background-color: #ffe4ec;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .agenda-item {
+      border-bottom: 1px solid #d69cb6;
+      padding: 10px 0;
+    }
+    .hidden {
+      display: none;
+    }
+    .top-bar {
+      text-align: right;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="agendamentoArea">
+    <div class="top-bar">
+      <button onclick="mostrarLogin()">Área da Profissional</button>
+    </div>
+    <h1>Studio Hema - Agendamento</h1>
+    <form id="formAgendamento">
+      <label for="nome">Seu nome:</label>
+      <input type="text" id="nome" required>
+
+      <label for="servico">Serviço:</label>
+      <select id="servico" required>
+        <option value="">Selecione</option>
+        <option>Alongamento de cílios</option>
+        <option>Manicure</option>
+        <option>Pedicure</option>
+        <option>Manicure + Pedicure</option>
+      </select>
+
+      <label for="profissional">Profissional:</label>
+      <select id="profissional" required>
+        <option value="">Selecione</option>
+        <option>Mayra Mendes</option>
+        <option>Karina Ferreira</option>
+      </select>
+
+      <label for="data">Data:</label>
+      <input type="date" id="data" min="" required>
+
+      <label for="hora">Horário:</label>
+      <select id="hora" required></select>
+
+      <button type="submit">Agendar</button>
+    </form>
+
+    <div class="confirmation" id="confirmacao" style="display:none;"></div>
+  </div>
+
+  <div class="login-container hidden" id="loginArea">
+    <h2>Login da Profissional</h2>
+    <label for="loginUser">Usuário:</label>
+    <input type="text" id="loginUser" placeholder="mayra ou karina" required>
+
+    <label for="loginPass">Senha:</label>
+    <input type="password" id="loginPass" placeholder="Senha" required>
+
+    <button onclick="fazerLogin()">Entrar</button>
+    <button onclick="voltar()">Voltar</button>
+    <div id="loginErro" style="color:red; display:none; text-align:center;">Usuário ou senha incorretos!</div>
+  </div>
+
+  <div class="container hidden" id="painelArea">
+    <div class="top-bar">
+      <button onclick="logout()">Sair</button>
+    </div>
+    <h2>Agendamentos Recebidos</h2>
+    <div class="agenda-list" id="agendamentos"></div>
+  </div>
+
+  <footer style="text-align: center; margin-top: 40px; padding: 20px; background-color: #ffe4ec; color: #a0106d; font-weight: bold;">
+    End: Rua Gavião n° 7 | Telefone: (11) 96760-3025
+  </footer>
+
+  <script>
+    const confirmacao = document.getElementById('confirmacao');
+    const agendamentosDiv = document.getElementById('agendamentos');
+    const form = document.getElementById('formAgendamento');
+    const dataInput = document.getElementById('data');
+    const horaSelect = document.getElementById('hora');
+
+    const agendamentoArea = document.getElementById('agendamentoArea');
+    const loginArea = document.getElementById('loginArea');
+    const painelArea = document.getElementById('painelArea');
+
+    const hoje = new Date().toISOString().split("T")[0];
+    dataInput.min = hoje;
+
+    function gerarHorarios() {
+      horaSelect.innerHTML = "";
+      for (let h = 6; h <= 22; h++) {
+        const hora = h.toString().padStart(2, '0') + ":00";
+        horaSelect.innerHTML += `<option>${hora}</option>`;
+      }
+    }
+
+    dataInput.addEventListener('change', () => {
+      const dia = new Date(dataInput.value).getDay();
+      if (dia === 1) {
+        alert("Agendamentos apenas de terça a domingo.");
+        dataInput.value = "";
+      }
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nome = document.getElementById('nome').value;
+      const servico = document.getElementById('servico').value;
+      const profissional = document.getElementById('profissional').value;
+      const data = document.getElementById('data').value;
+      const hora = document.getElementById('hora').value;
+
+      const agendamento = { nome, servico, profissional, data, hora };
+      const agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
+      agendamentos.push(agendamento);
+      localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
+
+      confirmacao.style.display = "block";
+      confirmacao.innerHTML = `<strong>Agendamento confirmado!</strong><br>Nome: ${nome}<br>Serviço: ${servico}<br>Profissional: ${profissional}<br>Data: ${data}<br>Hora: ${hora}`;
+
+      form.reset();
+      gerarHorarios();
+    });
+
+    function mostrarLogin() {
+      agendamentoArea.classList.add("hidden");
+      loginArea.classList.remove("hidden");
+    }
+
+    function voltar() {
+      loginArea.classList.add("hidden");
+      agendamentoArea.classList.remove("hidden");
+    }
+
+    function fazerLogin() {
+      const user = document.getElementById('loginUser').value.trim().toLowerCase();
+      const pass = document.getElementById('loginPass').value.trim();
+      const erro = document.getElementById('loginErro');
+
+      if ((user === "mayra" || user === "karina") && pass === "studiohema") {
+        loginArea.classList.add("hidden");
+        painelArea.classList.remove("hidden");
+        carregarAgendamentos();
+      } else {
+        erro.style.display = "block";
+      }
+    }
+
+    function carregarAgendamentos() {
+      const agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
+      agendamentosDiv.innerHTML = "";
+      agendamentos.forEach((a) => {
+        agendamentosDiv.innerHTML += `
+          <div class="agenda-item">
+            <strong>${a.nome}</strong> - ${a.servico}<br>
+            Profissional: ${a.profissional}<br>
+            Data: ${a.data} às ${a.hora}
+          </div>`;
+      });
+    }
+
+    function logout() {
+      painelArea.classList.add("hidden");
+      agendamentoArea.classList.remove("hidden");
+    }
+
+    window.onload = gerarHorarios;
+  </script>
+</body>
+</html>
