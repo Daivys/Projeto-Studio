@@ -1,0 +1,68 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fff0f5;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+.container, .login-container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #c71585;
+  padding: 30px;
+}
+h1, h2 {
+  text-align: center;
+  color: #c71585;
+}
+label {
+  display: block;
+  margin: 10px 0 5px;
+}
+input, select, button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box; /* Adicionado para melhor controle de padding e border */
+}
+button {
+  background-color: #c71585;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #a0106d;
+}
+.confirmation, .agenda-list {
+  background-color: #ffe4ec;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+.agenda-item {
+  border-bottom: 1px solid #d69cb6;
+  padding: 10px 0;
+}
+.agenda-item:last-child { /* Para não ter borda no último item */
+  border-bottom: none;
+}
+.hidden {
+  display: none;
+}
+.top-bar {
+  text-align: right;
+  margin-bottom: 20px; /* Ajuste de margem */
+}
+footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #ffe4ec;
+  color: #a0106d;
+  font-weight: bold;
+}
